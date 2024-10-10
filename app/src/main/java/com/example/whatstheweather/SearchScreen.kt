@@ -8,6 +8,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.livedata.observeAsState
+import java.util.Locale
 
 @Composable
 fun SearchScreen(viewModel: WeatherViewModel) {
@@ -36,10 +37,14 @@ fun SearchScreen(viewModel: WeatherViewModel) {
         }
 
         weatherData?.let { weather ->
-            Text(text = "Temperature: ${weather.main.temp}°C")
-            //Text(text = "Humidity: ${weather.main.humidity}%")
-            Text(text = "Weather: ${weather.weather[0].description.capitalize()}")
-            //Text(text = "Wind Speed: ${weather.wind.speed} m/s")
+            val temperatureFahrenheit = (weather.main.temp - 273.15) * 9 / 5 + 32
+            val temperatureCelsius = weather.main.temp - 273.15
+            Text(text = "Temperature: %.2f°F / %.2f°C".format(temperatureCelsius, temperatureFahrenheit))
+            Text(text = "Weather: ${weather.weather[0].description.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.ROOT
+                ) else it.toString()
+            }}")
         }
     }
 }
