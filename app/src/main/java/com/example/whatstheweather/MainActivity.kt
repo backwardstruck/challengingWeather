@@ -1,6 +1,7 @@
 package com.example.whatstheweather
 
 import android.Manifest
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
@@ -40,30 +41,21 @@ class MainActivity : ComponentActivity() {
 
                 var cityName by remember { mutableStateOf(lastCity ?: "") }
 
-
-
                 val errorMessage by weatherViewModel.errorMessage.observeAsState()
 
-
                 errorMessage?.let {
-
                     Toast.makeText(this@MainActivity, it, Toast.LENGTH_SHORT).show()
-                }
-
-                if (!lastCity.isNullOrEmpty()) {
-                    LaunchedEffect(Unit) {
-                        weatherViewModel.fetchCoordinates(lastCity)
-                    }
                 }
 
                 RequestLocationPermission { granted ->
                     if (granted) {
-                        getCurrentLocationAndFetchWeather()
+                        getCurrentLocationAndFetchWeather(sharedPreferences, cityName)
                     } else if (!lastCity.isNullOrEmpty()) {
                         weatherViewModel.fetchCoordinates(lastCity)
+                    } else {
+                        Toast.makeText(this, "Please enter a city or enable location services.", Toast.LENGTH_SHORT).show()
                     }
                 }
-
 
                 SearchScreen(
                     viewModel = weatherViewModel,
@@ -73,7 +65,6 @@ class MainActivity : ComponentActivity() {
                         cityName = newCityName
                     }
                 )
-
             }
         }
     }
@@ -101,7 +92,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun getCurrentLocationAndFetchWeather() {
+    private fun getCurrentLocationAndFetchWeather(sharedPreferences: SharedPreferences, cityName: String) {
         try {
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location ->
@@ -109,16 +100,15 @@ class MainActivity : ComponentActivity() {
                         val lat = location.latitude
                         val lon = location.longitude
 
-
                         weatherViewModel.fetchWeather(lat, lon)
+                    } else if (cityName.isNotEmpty()) {
+                        weatherViewModel.fetchCoordinates(cityName)
                     } else {
-                        // TODO: Handle case where location is null
+                        Toast.makeText(this, "Could not retrieve location or city. Please try again.", Toast.LENGTH_SHORT).show()
                     }
                 }
         } catch (e: SecurityException) {
             e.printStackTrace()
-
         }
     }
 }
-
