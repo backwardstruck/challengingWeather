@@ -22,16 +22,15 @@ import kotlin.math.roundToInt
 fun SearchScreen(
     viewModel: WeatherViewModel,
     sharedPreferences: SharedPreferences,
-    cityNameState: String,
+    placeName: String,
     onCityNameChange: (String) -> Unit)   {
-    var cityName by remember { mutableStateOf("") }
 
     val coordinates by viewModel.coordinates.observeAsState()
     val weatherData by viewModel.weatherData.observeAsState()
 
     Column {
         TextField(
-            value = cityNameState,
+            value = placeName,
             onValueChange = { onCityNameChange(it) },
             label = { Text("Enter City") },
             modifier = Modifier.fillMaxWidth()
@@ -39,10 +38,10 @@ fun SearchScreen(
 
 
         Button(onClick = {
-            viewModel.fetchCoordinates(cityNameState)
+            viewModel.fetchCoordinates(placeName)
 
             with(sharedPreferences.edit()) {
-                putString("lastPlace", cityNameState)
+                putString("lastPlace", placeName)
                 apply()
             }
         }) {
