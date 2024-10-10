@@ -30,15 +30,20 @@ class WeatherViewModelTest {
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
 
-        weatherViewModel = WeatherViewModel()
+        weatherViewModel = WeatherViewModel(weatherApiService)
+
         weatherViewModel.weatherData.observeForever(weatherObserver)
     }
 
     @Test
-    fun fetchWeatherwithvalidresponseupdatesLiveData() {
-        val mockResponse = WeatherResponse(main = Main(temp = 298.0F, humidity = 17), weather = listOf(), wind = Wind(speed = 50.0F))
+    fun fetchWeather_withValidResponse_updatesLiveData() {
+        val mockResponse = WeatherResponse(
+            main = Main(temp = 298.0F, humidity = 17),
+            weather = listOf(),
+            wind = Wind(speed = 50.0F)
+        )
         val response = Response.success(mockResponse)
 
         Mockito.`when`(weatherApiService.getWeatherByCoordinates(Mockito.anyDouble(), Mockito.anyDouble(), Mockito.anyString()))
