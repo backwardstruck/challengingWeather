@@ -12,14 +12,14 @@ class WeatherViewModel : ViewModel() {
     val weatherData: LiveData<WeatherResponse> = _weatherData
     private val _coordinates = MutableLiveData<List<GeocodingResponse>?>()
     val coordinates: MutableLiveData<List<GeocodingResponse>?> = _coordinates
-    private val API_KEY = "6b3178c1548686e04c0061d3c19f21e8"
+    private val apiKey = "6b3178c1548686e04c0061d3c19f21e8"
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
 
     fun fetchWeather(lat: Double, lon: Double) {
         val call = RetrofitInstance.api.getWeatherByCoordinates(
-            lat, lon, API_KEY
+            lat, lon, apiKey
         )
 
         call.enqueue(object : Callback<WeatherResponse> {
@@ -38,7 +38,7 @@ class WeatherViewModel : ViewModel() {
     }
 
     fun fetchCoordinates(cityName: String) {
-        val call = RetrofitInstance.api.getCoordinatesByCityName(cityName, apiKey = API_KEY)
+        val call = RetrofitInstance.api.getCoordinatesByCityName(cityName, apiKey = apiKey)
         call.enqueue(object : Callback<List<GeocodingResponse>> {
             override fun onResponse(
                 call: Call<List<GeocodingResponse>>,
@@ -67,7 +67,7 @@ class WeatherViewModel : ViewModel() {
     }
 
     fun reverseGeocode(lat: Double, lon: Double) {
-        val call = RetrofitInstance.api.reverseGeocode(lat, lon, 1, API_KEY)
+        val call = RetrofitInstance.api.reverseGeocode(lat, lon, 1, apiKey)
         call.enqueue(object : Callback<List<GeocodingResponse>> {
             override fun onResponse(
                 call: Call<List<GeocodingResponse>>,
