@@ -1,5 +1,6 @@
 package com.example.whatstheweather
 
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,10 +13,14 @@ class WeatherViewModel : ViewModel() {
     val weatherData: LiveData<WeatherResponse> = _weatherData
     private val _coordinates = MutableLiveData<List<GeocodingResponse>>()
     val coordinates: LiveData<List<GeocodingResponse>> = _coordinates
+    private val API_KEY = "6b3178c1548686e04c0061d3c19f21e8"
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
 
     fun fetchWeather(lat: Double, lon: Double) {
         val call = RetrofitInstance.api.getWeatherByCoordinates(
-            lat, lon, "6b3178c1548686e04c0061d3c19f21e8"
+            lat, lon, API_KEY
         )
 
         call.enqueue(object : Callback<WeatherResponse> {
@@ -34,7 +39,7 @@ class WeatherViewModel : ViewModel() {
     }
 
     fun fetchCoordinates(cityName: String) {
-        val call = RetrofitInstance.api.getCoordinatesByCityName(cityName, apiKey = "YOUR_API_KEY")
+        val call = RetrofitInstance.api.getCoordinatesByCityName(cityName, apiKey = API_KEY)
         call.enqueue(object : Callback<List<GeocodingResponse>> {
             override fun onResponse(
                 call: Call<List<GeocodingResponse>>,
@@ -49,6 +54,7 @@ class WeatherViewModel : ViewModel() {
 
             override fun onFailure(call: Call<List<GeocodingResponse>>, t: Throwable) {
 
+                _errorMessage.postValue("Error: ${t.message}")
 
 
             }

@@ -23,7 +23,6 @@ fun SearchScreen(viewModel: WeatherViewModel) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Button to fetch coordinates based on the city name
         Button(onClick = {
             viewModel.fetchCoordinates(cityName)
         }) {
