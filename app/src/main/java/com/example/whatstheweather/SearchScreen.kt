@@ -14,6 +14,7 @@ fun SearchScreen(viewModel: WeatherViewModel) {
     var cityName by remember { mutableStateOf("") }
 
     val coordinates by viewModel.coordinates.observeAsState()
+    val weatherData by viewModel.weatherData.observeAsState()
 
     Column {
         TextField(
@@ -32,6 +33,13 @@ fun SearchScreen(viewModel: WeatherViewModel) {
         coordinates?.let {
             Text(text = "Latitude: ${it[0].lat}, Longitude: ${it[0].lon}")
             Text(text = "Country: ${it[0].country}, State: ${it[0].state ?: "N/A"}")
+        }
+
+        weatherData?.let { weather ->
+            Text(text = "Temperature: ${weather.main.temp}°C")
+            //Text(text = "Humidity: ${weather.main.humidity}%")
+            Text(text = "Weather: ${weather.weather[0].description.capitalize()}")
+            //Text(text = "Wind Speed: ${weather.wind.speed} m/s")
         }
     }
 }

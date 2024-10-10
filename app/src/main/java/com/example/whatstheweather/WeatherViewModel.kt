@@ -11,8 +11,8 @@ import retrofit2.Response
 class WeatherViewModel : ViewModel() {
     private val _weatherData = MutableLiveData<WeatherResponse>()
     val weatherData: LiveData<WeatherResponse> = _weatherData
-    private val _coordinates = MutableLiveData<List<GeocodingResponse>>()
-    val coordinates: LiveData<List<GeocodingResponse>> = _coordinates
+    private val _coordinates = MutableLiveData<List<GeocodingResponse>?>()
+    val coordinates: MutableLiveData<List<GeocodingResponse>?> = _coordinates
     private val API_KEY = "6b3178c1548686e04c0061d3c19f21e8"
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
@@ -46,12 +46,15 @@ class WeatherViewModel : ViewModel() {
                 response: Response<List<GeocodingResponse>>
             ) {
                 if (response.isSuccessful) {
-                    _coordinates.postValue(response.body())
+                    val coordinatesList = response.body()
+                    if (!coordinatesList.isNullOrEmpty()) {
+                        _coordinates.postValue(coordinatesList)
 
-                    print(response.body())
-                } else {
-                    _errorMessage.postValue("Error: ${response.body()}")
 
+                        val lat = coordinatesList[0].lat
+                        val lon = coordinatesList[0].lon
+                        fetchWeather(lat, lon)
+                    }
                 }
             }
 
