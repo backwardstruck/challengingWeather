@@ -18,6 +18,14 @@ import coil.compose.rememberAsyncImagePainter
 import java.util.Locale
 import kotlin.math.roundToInt
 
+const val MAX_LINES = 1
+const val ICON_SIZE_DP = 200
+const val PADDING_DP = 32
+const val KELVIN_TO_CELSIUS_OFFSET = 273.15
+const val KELVIN_TO_FAHRENHEIT_MULTIPLIER = 9.0 / 5.0
+const val FAHRENHEIT_OFFSET = 32
+const val METER_PER_SEC_TO_MPH = 2.23694
+
 @Composable
 fun SearchScreen(
     viewModel: WeatherViewModel,
@@ -43,7 +51,7 @@ fun SearchScreen(
             onValueChange = { onCityNameChange(it) },
             label = { Text("Enter City") },
             modifier = Modifier.fillMaxWidth(),
-            maxLines = 1
+            maxLines = MAX_LINES
         )
 
         Button(onClick = {
@@ -66,8 +74,8 @@ fun SearchScreen(
         }
 
         weatherData?.let { weather ->
-            val temperatureFahrenheit = (weather.main.temp - 273.15) * 9 / 5 + 32
-            val temperatureCelsius = weather.main.temp - 273.15
+            val temperatureFahrenheit = (weather.main.temp - KELVIN_TO_CELSIUS_OFFSET) * KELVIN_TO_FAHRENHEIT_MULTIPLIER + FAHRENHEIT_OFFSET
+            val temperatureCelsius = weather.main.temp - KELVIN_TO_CELSIUS_OFFSET
             HorizontalDivider()
 
             Text(text = "Temperature: %.2f°F / %.2f°C".format(temperatureCelsius, temperatureFahrenheit))
@@ -78,7 +86,7 @@ fun SearchScreen(
 
             HorizontalDivider()
 
-            val windSpeedMph = (weather.wind.speed * 2.23694).roundToInt()
+            val windSpeedMph = (weather.wind.speed * METER_PER_SEC_TO_MPH).roundToInt()
             Text(text = "Wind Speed: $windSpeedMph MPH")
 
             HorizontalDivider()
@@ -87,7 +95,7 @@ fun SearchScreen(
             Image(
                 painter = rememberAsyncImagePainter(iconUrl),
                 contentDescription = "Weather Icon",
-                modifier = Modifier.size(200.dp).padding(32.dp)
+                modifier = Modifier.size(ICON_SIZE_DP.dp).padding(PADDING_DP.dp)
             )
         }
     }
