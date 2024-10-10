@@ -19,4 +19,12 @@ interface WeatherApiService {
         @Query("limit") limit: Int = 1,
         @Query("appid") apiKey: String
     ): Call<List<GeocodingResponse>>
+
+    @GET("geo/1.0/reverse")
+    fun reverseGeocode(
+        @Query("lat") latitude: Double,
+        @Query("lon") longitude: Double,
+        @Query("limit") limit: Int = 1,
+        @Query("appid") apiKey: String
+    ): Call<List<GeocodingResponse>>
 }

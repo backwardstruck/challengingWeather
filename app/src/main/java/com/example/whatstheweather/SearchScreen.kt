@@ -23,9 +23,9 @@ fun SearchScreen(
     viewModel: WeatherViewModel,
     sharedPreferences: SharedPreferences,
     placeName: String,
-    onCityNameChange: (String) -> Unit)   {
-
-    val coordinates by viewModel.coordinates.observeAsState()
+    onCityNameChange: (String) -> Unit
+) {
+    val coordinates by viewModel.coordinates.observeAsState()  // Observe reverse geocoding results
     val weatherData by viewModel.weatherData.observeAsState()
 
     Column {
@@ -37,10 +37,8 @@ fun SearchScreen(
             maxLines = 1
         )
 
-
         Button(onClick = {
             viewModel.fetchCoordinates(placeName)
-
             with(sharedPreferences.edit()) {
                 putString("lastPlace", placeName)
                 apply()
@@ -53,8 +51,9 @@ fun SearchScreen(
 
 
         coordinates?.let {
+            Text(text = "Location: ${it[0].name}, ${it[0].country}")
             Text(text = "Latitude: ${it[0].lat}, Longitude: ${it[0].lon}")
-            Text(text = "Country: ${it[0].country}, State: ${it[0].state ?: "N/A"}")
+            Text(text = "State: ${it[0].state ?: "N/A"}")
         }
 
         weatherData?.let { weather ->
@@ -65,16 +64,13 @@ fun SearchScreen(
             Text(text = "Temperature: %.2f°F / %.2f°C".format(temperatureCelsius, temperatureFahrenheit))
             Text(text = "Humidity: ${weather.main.humidity}%")
             Text(text = "Weather: ${weather.weather[0].description.replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase(
-                    Locale.ROOT
-                ) else it.toString()
+                if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString()
             }}")
 
             HorizontalDivider()
 
             val windSpeedMph = (weather.wind.speed * 2.23694).roundToInt()
             Text(text = "Wind Speed: $windSpeedMph MPH")
-
 
             HorizontalDivider()
 
@@ -85,7 +81,5 @@ fun SearchScreen(
                 modifier = Modifier.size(200.dp).padding(32.dp)
             )
         }
-
-
     }
 }

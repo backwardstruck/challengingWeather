@@ -66,4 +66,25 @@ class WeatherViewModel : ViewModel() {
             }
         })
     }
+
+    fun reverseGeocode(lat: Double, lon: Double) {
+        val call = RetrofitInstance.api.reverseGeocode(lat, lon, 1, API_KEY)
+        call.enqueue(object : Callback<List<GeocodingResponse>> {
+            override fun onResponse(
+                call: Call<List<GeocodingResponse>>,
+                response: Response<List<GeocodingResponse>>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    _coordinates.postValue(response.body())
+                } else {
+                    // TODO: Handle API failure
+                }
+            }
+
+            override fun onFailure(call: Call<List<GeocodingResponse>>, t: Throwable) {
+                // TODO: Handle error
+            }
+        })
+    }
+
 }

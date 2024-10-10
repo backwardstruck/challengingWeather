@@ -100,6 +100,8 @@ class MainActivity : ComponentActivity() {
                         val lat = location.latitude
                         val lon = location.longitude
 
+                        weatherViewModel.reverseGeocode(lat, lon)
+
                         weatherViewModel.fetchWeather(lat, lon)
                     } else if (cityName.isNotEmpty()) {
                         weatherViewModel.fetchCoordinates(cityName)
@@ -111,4 +113,5 @@ class MainActivity : ComponentActivity() {
             e.printStackTrace()
         }
     }
+
 }
