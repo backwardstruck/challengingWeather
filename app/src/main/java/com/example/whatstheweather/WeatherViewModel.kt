@@ -49,6 +49,9 @@ class WeatherViewModel : ViewModel() {
                     _coordinates.postValue(response.body())
 
                     print(response.body())
+                } else {
+                    _errorMessage.postValue("Error: ${response.body()}")
+
                 }
             }
 
