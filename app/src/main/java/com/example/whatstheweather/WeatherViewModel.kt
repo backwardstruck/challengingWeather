@@ -7,7 +7,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class WeatherViewModel : ViewModel() {
+class WeatherViewModel(private val weatherApiService: WeatherApiService) : ViewModel() {
     private val _weatherData = MutableLiveData<WeatherResponse>()
     val weatherData: LiveData<WeatherResponse> = _weatherData
     private val _coordinates = MutableLiveData<List<GeocodingResponse>?>()
@@ -16,12 +16,8 @@ class WeatherViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
-
     fun fetchWeather(lat: Double, lon: Double) {
-        val call = RetrofitInstance.api.getWeatherByCoordinates(
-            lat, lon, apiKey
-        )
-
+        val call = weatherApiService.getWeatherByCoordinates(lat, lon, apiKey)
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
                 if (response.isSuccessful) {
@@ -30,9 +26,7 @@ class WeatherViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-
-
-
+                _errorMessage.postValue("Error: ${t.message}")
             }
         })
     }

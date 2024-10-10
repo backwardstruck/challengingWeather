@@ -18,19 +18,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.example.whatstheweather.ui.theme.WhatsTheWeatherTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 class MainActivity : ComponentActivity() {
 
-    private val weatherViewModel: WeatherViewModel by viewModels()
+    private lateinit var weatherViewModel: WeatherViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        val weatherApiService = RetrofitInstance.api
+
+        val factory = WeatherViewModelFactory(weatherApiService)
+        weatherViewModel = ViewModelProvider(this, factory)[WeatherViewModel::class.java]
 
         val sharedPreferences = getSharedPreferences("weather_prefs", MODE_PRIVATE)
         val lastCity = sharedPreferences.getString("lastPlace", "")
@@ -113,5 +119,4 @@ class MainActivity : ComponentActivity() {
             e.printStackTrace()
         }
     }
-
 }
