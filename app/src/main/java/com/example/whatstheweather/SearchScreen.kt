@@ -25,8 +25,14 @@ fun SearchScreen(
     placeName: String,
     onCityNameChange: (String) -> Unit
 ) {
-    val coordinates by viewModel.coordinates.observeAsState()  // Observe reverse geocoding results
+    val coordinates by viewModel.coordinates.observeAsState()
     val weatherData by viewModel.weatherData.observeAsState()
+
+    coordinates?.let {
+        if (it.isNotEmpty()) {
+            onCityNameChange(it[0].name)
+        }
+    }
 
     Column {
         TextField(
@@ -39,6 +45,7 @@ fun SearchScreen(
 
         Button(onClick = {
             viewModel.fetchCoordinates(placeName)
+
             with(sharedPreferences.edit()) {
                 putString("lastPlace", placeName)
                 apply()
