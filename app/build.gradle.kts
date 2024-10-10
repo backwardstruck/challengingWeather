@@ -8,6 +8,12 @@ android {
     namespace = "com.example.whatstheweather"
     compileSdk = 34
 
+    sourceSets {
+        getByName("main").java.srcDirs("src/main/java")
+        getByName("test").java.srcDirs("src/test/java")
+        getByName("androidTest").java.srcDirs("src/androidTest/java")
+    }
+
     defaultConfig {
         applicationId = "com.example.whatstheweather"
         minSdk = 24
