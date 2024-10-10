@@ -33,7 +33,8 @@ fun SearchScreen(
             value = placeName,
             onValueChange = { onCityNameChange(it) },
             label = { Text("Enter City") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            maxLines = 1
         )
 
 
@@ -81,7 +82,7 @@ fun SearchScreen(
             Image(
                 painter = rememberAsyncImagePainter(iconUrl),
                 contentDescription = "Weather Icon",
-                modifier = Modifier.size(100.dp).padding(top = 16.dp)
+                modifier = Modifier.size(200.dp).padding(32.dp)
             )
         }
 
