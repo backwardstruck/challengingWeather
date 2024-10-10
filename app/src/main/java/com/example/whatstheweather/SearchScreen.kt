@@ -28,9 +28,12 @@ fun SearchScreen(
     val coordinates by viewModel.coordinates.observeAsState()
     val weatherData by viewModel.weatherData.observeAsState()
 
+    var locationSetFromGPS by remember { mutableStateOf(false) }
+
     coordinates?.let {
-        if (it.isNotEmpty()) {
+        if (it.isNotEmpty() && !locationSetFromGPS) {
             onCityNameChange(it[0].name)
+            locationSetFromGPS = true
         }
     }
 
@@ -55,7 +58,6 @@ fun SearchScreen(
         }
 
         HorizontalDivider()
-
 
         coordinates?.let {
             Text(text = "Location: ${it[0].name}, ${it[0].country}")
