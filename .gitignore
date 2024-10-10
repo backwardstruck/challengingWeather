@@ -22,3 +22,26 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (local.properties should not be checked in)
+local.properties
+
+# Android Studio files
+.idea/
+*.iml
+
+# Misc
+*.lock
+*.log
+
+# Others (if you use certain tools, you can add their specific ignores)
+*.hprof
+*.orig
+*.apk
+*.ap_
+*.dex
+
