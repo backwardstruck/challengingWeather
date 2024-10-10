@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.livedata.observeAsState
 import java.util.Locale
+import kotlin.math.roundToInt
 
 @Composable
 fun SearchScreen(viewModel: WeatherViewModel) {
@@ -40,11 +41,14 @@ fun SearchScreen(viewModel: WeatherViewModel) {
             val temperatureFahrenheit = (weather.main.temp - 273.15) * 9 / 5 + 32
             val temperatureCelsius = weather.main.temp - 273.15
             Text(text = "Temperature: %.2f°F / %.2f°C".format(temperatureCelsius, temperatureFahrenheit))
+            Text(text = "Humidity: ${weather.main.humidity}%")
             Text(text = "Weather: ${weather.weather[0].description.replaceFirstChar {
                 if (it.isLowerCase()) it.titlecase(
                     Locale.ROOT
                 ) else it.toString()
             }}")
+            val windSpeedMph = (weather.wind.speed * 2.23694).roundToInt()
+            Text(text = "Wind Speed: $windSpeedMph MPH")
         }
     }
 }
