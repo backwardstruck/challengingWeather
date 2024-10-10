@@ -2,12 +2,12 @@ package com.example.whatstheweather
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,6 +30,7 @@ class WeatherViewModelTest {
 
     @Before
     fun setUp() {
+        MockitoAnnotations.initMocks(this)
 
         weatherViewModel = WeatherViewModel()
         weatherViewModel.weatherData.observeForever(weatherObserver)
